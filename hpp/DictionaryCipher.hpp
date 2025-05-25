@@ -8,55 +8,21 @@
 class DictionaryCipher : public Cipher
 {
 public:
-    DictionaryCipher();
     DictionaryCipher(const std::string& _dictionaryText);
 
 public:
     virtual std::string encrypt(const std::string& text) const override;
     virtual std::string decrypt(const std::string& pass) const override;
 
-    std::string getType() const override;
+    virtual std::string getType() const override;
 
 private:
-    void initializeDictionary();
+    void setDictionary(const std::string textDictionary);
+
+    void inserUnique(std::vector<char>& set,char value);
 
 private:
-    std::string dictionaryText;
-    std::unordered_map<char, int> charToPos;
-    std::unordered_map<int, char> posToChar;
-
-
-    // struct DictionaryEntry
-    // {
-    //     char symbol;
-    //     int key;
-    // };
-    // std::vector<DictionaryEntry> vec;
-    // void aloda () 
-    // {
-    //     for (size_t i = 0; i < dictionaryText.size(); i++)
-    //     {
-    //         bool flag=false;
-    //         DictionaryEntry da;
-    //         da.key=i;
-    //         da.symbol=dictionaryText[i];
-
-    //         for (size_t j = 0; j < vec.size(); j++)
-    //         {
-    //             if(vec[j].symbol == da.symbol)
-    //             {
-    //                 flag=true;
-    //                 break;
-    //             }
-    //         }
-
-    //         if(!flag) 
-    //         {
-    //             vec.push_back(da);
-    //         }
-            
-    //     }
-    // }
+    std::vector<char> dictionary;     //TODO to use set
 };
 
 #endif

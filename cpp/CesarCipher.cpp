@@ -1,7 +1,17 @@
+#include <stdexcept>
 #include "CesarCipher.hpp"
+#include "DictionaryCipher.hpp"
+
+CesarCipher::CesarCipher(short _shift)
+{
+    setShift(_shift);
+}
 
 std::string CesarCipher::encrypt(const std::string &text) const
 {
+    if(!validate(text))
+        throw std::invalid_argument("Invalid password to encrypt only allowed charachters are small and capital letters, numbers, and the symbols: #; $; %; &; '; (; ); *; +; ,; -; .; /");
+
     std::string result = "";
 
     for (size_t i = 0; i < text.size(); i++)
@@ -27,25 +37,39 @@ std::string CesarCipher::getType() const
     return "Cesar";
 }
 
+short CesarCipher::getShift() const
+{
+    return shift;
+}
+
+void CesarCipher::setShift(short _shift)
+{
+    shift = mod(_shift);
+}
+
 char CesarCipher::ShiftChar(char c, short shift) const
 {
-    char newChar = ' ';
-    if (c>=65 && c<=90)
+    if(shift==0)
     {
-        newChar = mod((c-65 + shift),26)+65;
+        return c;
     }
-    else if(c>=97 && c<=122)
+    if (c>='A' && c<='Z')
     {
-        newChar = mod((c-97 + shift),26)+97;
+        return mod(c-'A' + shift)+'A';
+    }
+    else if(c>='a' && c<='z')
+    {
+        int a = mod(c-'a' + shift)+'a';
+        return a;
     }
     else
     {
-        newChar=c;
+        return c;
     }
-    return newChar;
 }
 
-short CesarCipher::mod(short a, short b) const
+short CesarCipher::mod(short a) const
 {
-    return (a % b + b) % b;
+    const short alphabetLength = 26; 
+    return (a % alphabetLength + alphabetLength) % alphabetLength;
 }
