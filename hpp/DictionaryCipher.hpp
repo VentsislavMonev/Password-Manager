@@ -17,9 +17,9 @@ public:
     virtual std::string getType() const override;
 
 private:
-    void setDictionary(const std::string textDictionary);
+    void setDictionary(const std::string& textDictionary);
 
-    void inserUnique(std::vector<char>& set,char value);
+    void insertUnique(char value);
 
 private:
     std::vector<char> dictionary;     //TODO to use set

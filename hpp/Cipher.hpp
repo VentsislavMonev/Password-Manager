@@ -2,7 +2,6 @@
 #define CIPHER_HPP
 
 #include <string>
-#include <vector>
 
 class Cipher {
 public:
