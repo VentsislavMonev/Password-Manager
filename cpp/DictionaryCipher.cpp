@@ -1,15 +1,12 @@
-#include <stdexcept>
 #include "DictionaryCipher.hpp"
+#include <stdexcept>
 
 void DictionaryCipher::setDictionary(const std::string& textDictionary)
 {
-    if(!validate(textDictionary))
-        throw std::invalid_argument("Invalid password to encrypt only allowed charachters are small and capital letters, numbers, and the symbols: #; $; %; &; '; (; ); *; +; ,; -; .; /");
-
     size_t length = textDictionary.length();
     for (size_t i = 0; i < length; i++)
     {
-        insertUnique(textDictionary[i]);     //TODO do i somehow need to add a validation for textDictionary?
+        insertUnique(textDictionary[i]);    
     }
 }
 
@@ -36,9 +33,9 @@ DictionaryCipher::DictionaryCipher(const std::string &_dictionaryText)
 
 std::string DictionaryCipher::encrypt(const std::string &text) const
 {
-    if(!validate(text))
-        throw std::invalid_argument("Invalid password to encrypt only allowed charachters are small and capital letters, numbers, and the symbols: #; $; %; &; '; (; ); *; +; ,; -; .; /");
-
+    if(!isTextInDictionary(text))
+        throw std::invalid_argument("Invalid password to encrypt! Only allowed charachters are the ones that are in the dictionary text");
+    
     std::string result = "";
     size_t dictionaryLength = dictionary.size();
     size_t textLength = text.length();
@@ -57,6 +54,9 @@ std::string DictionaryCipher::encrypt(const std::string &text) const
 
 std::string DictionaryCipher::decrypt(const std::string &pass) const
 {
+    if(!checkForMissMatch(pass))
+        throw std::invalid_argument("Password couldn`t be decrypted. Possibly wasnt encrypted from this instance");
+
     std::string result="";
     size_t length = pass.length();
     for (size_t i = 0; i < length; i++)
@@ -64,4 +64,42 @@ std::string DictionaryCipher::decrypt(const std::string &pass) const
         result+=dictionary[pass[i]];
     }
     return result;
+}
+
+bool DictionaryCipher::isTextInDictionary(const std::string &text) const
+{
+    size_t length = text.size();
+    for (size_t i = 0; i < length; i++)
+    {
+        if(!containsChar(text[i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool DictionaryCipher::checkForMissMatch(const std::string &text) const
+{
+    size_t dictionaryLength= dictionary.size();
+    size_t textlength = text.length();
+    for (size_t i = 0; i < textlength; i++)
+    {
+        if(text[i]>=dictionaryLength)
+            return false;
+    }
+    return true;
+    
+}
+
+bool DictionaryCipher::containsChar(char c)const
+{
+    size_t length = dictionary.size();
+    for (size_t i = 0; i < length; i++)
+    {
+        if(dictionary[i]==c)
+            return true;
+    }
+    return false;
+    
 }
