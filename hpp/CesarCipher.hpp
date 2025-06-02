@@ -25,10 +25,10 @@ public:
     std::string getType() const override;
     
 private:
-    short getShift()const;  //TODO to remove this function
+    short getShift()const;  //TODO to remove this function?
     
     /// @brief sets the shift by which we will encrypt and gets its module 
-    /// @param _shift it gets this numbers module of 85
+    /// @param _shift it gets this numbers module of 94
     void setShift(short _shift);    
 
     /// @brief shift a char by a given offset
@@ -37,9 +37,9 @@ private:
     /// @return the shifted char
     char ShiftChar(char c, short offset)const;
     
-    /// @brief implements a simple math module of the count of the allowed symbols 85
+    /// @brief implements a simple math module of the count of the allowed symbols 94
     /// @param a the number from which we will get the module
-    /// @return the module of 85 of the number a
+    /// @return the module of 94 of the number a
     short mod(short a)const;
     
 private:

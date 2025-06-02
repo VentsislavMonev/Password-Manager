@@ -1,6 +1,7 @@
 #include "SquaredMatrix_zn.hpp"
 #include <stdexcept>
 #include <iostream>
+#include <string>
 
 int SquaredMatrix_zn::normalizeModulo(int value) const
 {

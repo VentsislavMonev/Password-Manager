@@ -78,6 +78,6 @@ char CesarCipher::ShiftChar(char c, short offset) const
 
 short CesarCipher::mod(short a) const
 {
-    const short allowedSymbolsCount = 85; 
+    const short allowedSymbolsCount = '~' - ' '; 
     return (a % allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount;
 }

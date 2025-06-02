@@ -16,6 +16,9 @@ public:
     std::vector<int>& operator[](int row);
     const std::vector<int>& operator[](int row) const;
     SquaredMatrix_zn operator*(const SquaredMatrix_zn& other) const;
+
+    int getDimension()const {return dimension;}
+    int getModNumber()const {return modNumber;}
     
 private:
     int normalizeModulo(int value) const;

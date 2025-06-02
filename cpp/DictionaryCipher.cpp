@@ -3,6 +3,9 @@
 
 void DictionaryCipher::setDictionary(const std::string& textDictionary)
 {
+    if(textDictionary.length() == 0)
+        throw std::invalid_argument("Dictionary text is empty!");
+    
     size_t length = textDictionary.length();
     for (size_t i = 0; i < length; i++)
     {
@@ -10,7 +13,6 @@ void DictionaryCipher::setDictionary(const std::string& textDictionary)
     }
 }
 
-// If the value is in there dont add anything so it doesnt duplicate
 void DictionaryCipher::insertUnique(char value)
 {
     for (char v : dictionary) {
@@ -45,7 +47,7 @@ std::string DictionaryCipher::encrypt(const std::string &text) const
         {
             if(text[i]==dictionary[j])
             {
-                result.push_back(j);
+                result.push_back(static_cast<char>(j));
             }
         }
     }

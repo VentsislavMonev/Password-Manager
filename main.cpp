@@ -57,7 +57,7 @@ int main()
     Entry vhod("pei.com", "pei40", "oomf");
     vhod.setEncryptedPassword("def");
     std::cout<<fellas.decrypt(vhod.getEncryptedPassword())<<std::endl;
-    std::cin>>vhod;
+    // std::cin>>vhod;
     std::cout<<vhod;
 
     try
@@ -82,8 +82,8 @@ int main()
     
     // Matrix
     //
+    SquaredMatrix_zn a({{1,2,3}, {0,3, 23}, {1,2, 12}}, 3,94);
     try {
-        SquaredMatrix_zn a({{1,2,3, 21}, {0,3,4, 23}, {1,2,14, 12}, {5,6,7, 23}}, 4,25);
         std::cout<<a.isInvertible()<<std::endl;
         a.print();
 
@@ -97,6 +97,76 @@ int main()
     }
     catch(const std::exception& error) {
           std::cout << error.what() << std::flush;
+    }
+
+
+    //Hill Cipher
+
+    try
+    {
+        std::string text = "lubo e mnogo gotin!";
+        int matrixSize = 3;
+        int remain = text.length()%matrixSize;
+        size_t gei = text.length();
+
+        const short allowedSymbolsCount = '~' - ' '; 
+        // return (a % allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount;
+
+        std::string ecnryptedPass;
+        for (size_t i = 0; i < gei-remain ; i+=matrixSize)
+        {
+            std::string current;
+            current.push_back((text[i]% allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount);
+            current.push_back((text[i+1]% allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount);
+            current.push_back((text[i+2]% allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount);
+
+            
+
+            std::string encryptedCurr;
+
+            for (int i = 0; i < matrixSize; ++i) {
+                int sum = 0;
+                for (int j = 0; j < matrixSize; ++j) {
+                    sum = (sum + a[i][j] * current[j]) % allowedSymbolsCount;
+                }
+                encryptedCurr.push_back((sum + allowedSymbolsCount) % allowedSymbolsCount);
+                std::cout<<(int)sum<<", ";
+            }
+            ecnryptedPass+=encryptedCurr;
+        }
+
+        std::string current="";
+        for (size_t i = gei-remain; i < gei; i++)
+        {
+            current.push_back((text[i]% allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount);
+        }
+
+        for (size_t i = remain; i < matrixSize; i++)
+        {
+            current.push_back(static_cast<char>(126-32));
+        }
+
+
+
+        std::string encryptedCurr;
+        for (int i = 0; i < matrixSize; ++i) {
+            int sum = 0;
+            for (int j = 0; j < matrixSize; ++j) {
+                sum = (sum + a[i][j] * current[j]) % allowedSymbolsCount;
+            }
+            encryptedCurr.push_back((sum + allowedSymbolsCount) % allowedSymbolsCount);
+            std::cout<<(int)sum<<", ";
+        }
+        ecnryptedPass+=encryptedCurr;
+
+        int index = ecnryptedPass.find((char)(126-32), gei-remain);
+        ecnryptedPass = ecnryptedPass.substr(0,index);
+        
+        
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
     }
     
     return 0;
