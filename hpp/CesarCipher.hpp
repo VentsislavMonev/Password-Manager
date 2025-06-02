@@ -23,10 +23,10 @@ public:
     virtual std::string decrypt(const std::string& pass) const override;
 
     std::string getType() const override;
-    short getShift()const; //TODO make private?
-
+    
 private:
-
+    short getShift()const;  //TODO to remove this function
+    
     /// @brief sets the shift by which we will encrypt and gets its module 
     /// @param _shift it gets this numbers module of 85
     void setShift(short _shift);    
@@ -47,7 +47,3 @@ private:
 };
 
 #endif
-
-//TODO 
-//da dobavq set/get za shift
-//da opravq konstrukturite

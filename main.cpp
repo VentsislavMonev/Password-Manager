@@ -57,7 +57,7 @@ int main()
     Entry vhod("pei.com", "pei40", "oomf");
     vhod.setEncryptedPassword("def");
     std::cout<<fellas.decrypt(vhod.getEncryptedPassword())<<std::endl;
-    // std::cin>>vhod;
+    std::cin>>vhod;
     std::cout<<vhod;
 
     try

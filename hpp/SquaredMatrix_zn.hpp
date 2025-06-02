@@ -3,7 +3,6 @@
 
 #include <vector>
 
-// template<typename size> TODO matrix<4> makes a 4x4 matrix
 class SquaredMatrix_zn
 {
 public:

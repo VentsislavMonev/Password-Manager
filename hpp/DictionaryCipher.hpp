@@ -52,7 +52,7 @@ private:
     void insertUnique(char value);
 
 private:
-    std::vector<char> dictionary;     //TODO to use set
+    std::vector<char> dictionary;     //TODO to use set. I do it like that becuase the course im in doesnt allow many libraries and i dont want to make my own set with a tree right now
 };
 
 #endif
