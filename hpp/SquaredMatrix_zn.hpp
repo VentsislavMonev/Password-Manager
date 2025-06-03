@@ -6,6 +6,7 @@
 class SquaredMatrix_zn
 {
 public:
+    SquaredMatrix_zn();
     SquaredMatrix_zn(const std::vector<std::vector<int>>&, int, int);
 
     int getDeterminant()const;
@@ -20,9 +21,10 @@ public:
     int getDimension()const {return dimension;}
     int getModNumber()const {return modNumber;}
     
-private:
     int normalizeModulo(int value) const;
     int modularMultiply(int a, int b) const;
+    
+private:
     int extendedGCD(int a, int b, int& x, int& y) const;
     int modularInverse(int a) const;
 

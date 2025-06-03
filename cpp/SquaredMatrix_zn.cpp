@@ -84,52 +84,16 @@ int SquaredMatrix_zn::calculateBiggerDeterminant(const std::vector<std::vector<i
     }
     
     return determinant;
-
-
-
-
-
-
-
-
-
-    // if (n == 1) 
-    // {
-    //     return mat[0][0];
-    // }
-    
-    // if (n == 2) 
-    // {
-    //     return mat[0][0] * mat[1][1] - 
-    //            mat[0][1] * mat[1][0];
-    // }
-    
-    // int res = 0;
-    // for (int col = 0; col < n; ++col) 
-    // {
-    //     std::vector<std::vector<int>> sub(n - 1, std::vector<int>(n - 1));
-
-    //     for (int i = 1; i < n; ++i) 
-    //     {
-    //         int subcol = 0;
-    //         for (int j = 0; j < n; ++j) 
-    //         {
-              
-    //             // Skip the current column
-    //             if (j == col) continue; 
-              
-    //             // Fill the submatrix
-    //             sub[i - 1][subcol++] = mat[i][j]; 
-    //         }
-    //     }
-      
-    //     int sign = (col % 2 == 0) ? 1 : -1;
-    //     res += sign * mat[0][col] * calculateBiggerDeterminant(sub, n - 1);
-    // }
-    // return res; 
 }
 
-SquaredMatrix_zn::SquaredMatrix_zn(const std::vector<std::vector<int>>& matrix, int _dimension, int _modNumber)
+SquaredMatrix_zn::SquaredMatrix_zn()
+{
+    squareMatrix = {{1}};
+    setDimension(1);
+    setMod(2);
+}
+
+SquaredMatrix_zn::SquaredMatrix_zn(const std::vector<std::vector<int>> &matrix, int _dimension, int _modNumber)
 {
     setDimension(_dimension);
     setMod(_modNumber);    
