@@ -17,16 +17,18 @@ public:
     std::string getType() const override;
 
 private:
-    int mod(int a)const;
-    std::string multiplyMatrixWithString(std::string& text, const SquaredMatrix_zn& matrix)const;
+    std::string multiplyMatrixWithString(const std::string& text, const SquaredMatrix_zn& matrix)const;
     bool validateDecrypt(const std::string& text)const;
-    std::string getDividedPassword(const std::string& text, const SquaredMatrix_zn& matrix)const;
+
+    std::string encodeLengthHeader(size_t length) const;
+    size_t decodeLengthHeader(const std::string& header) const;
+    std::string processDividedText(const std::string& text, const SquaredMatrix_zn& matrix, int offset)const;
+
     std::string getRemainingPassword(const std::string& text, const SquaredMatrix_zn& matrix)const;
 private:
     SquaredMatrix_zn keyMatrix;
     SquaredMatrix_zn  invertedMatrix;
     char fill;
-    // da vidq kak she stane
 };
 
 #endif

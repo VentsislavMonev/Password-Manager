@@ -13,7 +13,7 @@ public:
     bool isInvertible()const;
     SquaredMatrix_zn getInverseMatrix()const;
     void print()const;
-
+    
     std::vector<int>& operator[](int row);
     const std::vector<int>& operator[](int row) const;
     SquaredMatrix_zn operator*(const SquaredMatrix_zn& other) const;
