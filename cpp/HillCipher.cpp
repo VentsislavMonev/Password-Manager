@@ -15,7 +15,6 @@ HillCipher::HillCipher(const SquaredMatrix_zn &_keyMatrix)
     invertedMatrix = keyMatrix.getInverseMatrix();
 }
 
-
 std::string HillCipher::encrypt(const std::string &text) const
 {
     if(!Cipher::validate(text))
@@ -78,7 +77,7 @@ bool HillCipher::validateDecrypt(const std::string &text) const
         return false;
     
     size_t length = text.length();
-    for (size_t i = 4; i < length; i++)  // Skip the header where length is stored
+    for (size_t i = 4; i < length; ++i)  // Skip the header where length is stored
     {
         if(text[i] < 0 || text[i] >= keyMatrix.getModNumber())
             return false;
@@ -126,21 +125,20 @@ std::string HillCipher::getRemainingPassword(const std::string& text, const Squa
         current.push_back(text[i]-' ');
     }
 
-    char filll = static_cast<unsigned char>(rand() % 256);
     // Fill the rest with fictive symbols so it can do the matrix multiplication
     for (size_t i = remain; i < matrixSize; ++i)
     {
-        // TODO Maybe add different things instead of only fill symbols 
-        current.push_back(filll);
+        char fill = static_cast<unsigned char>(rand() % '~' - ' ');
+        current.push_back(fill);
     }
     encryptedPass+= multiplyMatrixWithString(current, keyMatrix);
 
     return encryptedPass;
 }
 
-std::string HillCipher::getType() const
+CipherType HillCipher::getType() const
 {
-    return "Hill";
+    return CipherType::HILL;
 }
 
 // Helper method to encode length as 4-byte header
@@ -166,4 +164,65 @@ size_t HillCipher::decodeLengthHeader(const std::string& header) const
     length |= (static_cast<unsigned char>(header[2]) << 8);
     length |= static_cast<unsigned char>(header[3]);
     return length;
+}
+
+std::string HillCipher::getConfig() const
+{
+    int dimension = keyMatrix.getDimension();
+    std::string config = std::to_string(dimension) + ":";
+    for (int i = 0; i < dimension; ++i) 
+    {
+        for (int j = 0; j < dimension; ++j) 
+        {
+            config += std::to_string(keyMatrix[i][j]);
+            if (i != dimension - 1 || j != dimension - 1) config += ",";
+        }
+    }
+    return config;
+}
+
+void HillCipher::setConfig(const std::string &config)
+{
+    // checks if the config start with a number that should be the dimension and if it has a ':'
+    size_t colonPos = config.find(':');
+    if (colonPos == std::string::npos || (config[0]<'0' ||config[0]>'9')) throw std::runtime_error("Invalid Hill cipher config format");
+
+    int dim = std::stoi(config.substr(0, colonPos));
+    
+    if(dim<3)
+        throw std::invalid_argument("Key matrix must be with dim bigger than 3 !");
+
+    std::vector<std::vector<int>> configMatrix (dim, std::vector<int>(dim));
+    std::string matrixString = config.substr(colonPos + 1);
+    size_t matrixStringLength = matrixString.length();
+    size_t pos = 0;
+    int row = 0, col = 0;
+
+    while (pos < matrixStringLength && row < dim)
+    {
+        size_t nextComma = matrixString.find(',', pos);
+        if (nextComma == std::string::npos) nextComma = matrixStringLength;
+        
+        if(config[pos]<'0' ||config[pos]>'9') throw std::runtime_error("Invalid Hill cipher config format");
+
+        configMatrix[row][col] = std::stoi(matrixString.substr(pos, nextComma - pos));
+        
+        col++;
+        if (col >= dim)
+        {
+            col = 0;
+            row++;
+        }
+        
+        pos = nextComma + 1;
+    }
+    
+    SquaredMatrix_zn matrix_zn(configMatrix, dim, '~' - ' ' + 1);
+
+    if(!matrix_zn.isInvertible())
+        throw std::invalid_argument("Key matrix must be invertible!");
+
+    keyMatrix = matrix_zn;
+    invertedMatrix = keyMatrix.getInverseMatrix();
+    
 }

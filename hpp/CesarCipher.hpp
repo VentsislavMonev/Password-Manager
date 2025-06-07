@@ -6,7 +6,7 @@
 class CesarCipher: public Cipher
 {
 public:
-    CesarCipher(short _shift);
+    CesarCipher(int _shift);
 
 public:
 
@@ -21,29 +21,31 @@ public:
     /// @param pass this is the container where the password that we want to decrypt is
     /// @return the decrypted original password will be returned
     virtual std::string decrypt(const std::string& pass) const override;
+    virtual std::string getConfig() const;
+    virtual void setConfig(const std::string& config);
 
-    std::string getType() const override;
+    virtual CipherType getType() const override;
     
 private:
-    short getShift()const;  //TODO to remove this function?
+    int getShift()const;  //TODO to remove this function?
     
     /// @brief sets the shift by which we will encrypt and gets its module 
     /// @param _shift it gets this numbers module of 94
-    void setShift(short _shift);    
+    void setShift(int _shift);    
 
     /// @brief shift a char by a given offset
     /// @param c the char that will be shifted
     /// @param offset how much we will shift by
     /// @return the shifted char
-    char ShiftChar(char c, short offset)const;
+    char ShiftChar(char c, int offset)const;
     
     /// @brief implements a simple math module of the count of the allowed symbols 94
     /// @param a the number from which we will get the module
     /// @return the module of 94 of the number a
-    short mod(short a)const;
+    int mod(int a)const;
     
 private:
-    short shift;
+    int shift;
 };
 
 #endif

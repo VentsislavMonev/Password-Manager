@@ -118,7 +118,9 @@ int main()
     std::cout<<std::endl;
     try
     {
-        SquaredMatrix_zn aa({{1,2,3},{1,2,3},{1,2,3}},3,95);
+
+        SquaredMatrix_zn aa({{1,2,3},{0,1,3},{0,0,1}},3,95);
+        HillCipher ivVI(aa);
         HillCipher iv(a);
         std::string ivString = iv.encrypt(text);
         std::string ivPass = iv.decrypt(ivString);
@@ -132,6 +134,11 @@ int main()
         
         // std::cout << "\""<< ivString << "\"   -   " << ivString.size() << std::endl;
         std::cout << "\"" << ivPass << "\"" << std::endl;
+        std::cout << iv.getConfig() << std::endl;
+        ivVI.setConfig(iv.getConfig());
+        std::cout << ivVI.getConfig() << std::endl;
+
+        
     }
     catch(const std::exception& e)
     {

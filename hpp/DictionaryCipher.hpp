@@ -23,8 +23,10 @@ public:
     /// @param pass this is the container where the password that we want to decrypt is
     /// @return the decrypted original password will be returned if it was encrypted by this instance. Throws otherwise 
     virtual std::string decrypt(const std::string& pass) const override;
+    virtual std::string getConfig() const;
+    virtual void setConfig(const std::string& config);
 
-    virtual std::string getType() const override;
+    virtual CipherType getType() const override;
 
 private:
 
@@ -53,6 +55,7 @@ private:
 
 private:
     std::vector<char> dictionary;     //TODO to use set. I do it like that becuase the course im in doesnt allow many libraries and i dont want to make my own set with a tree right now
+    std::string keyText;
 };
 
 #endif

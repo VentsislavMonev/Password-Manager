@@ -3,6 +3,13 @@
 
 #include <string>
 
+enum class CipherType 
+{
+    CESAR,
+    DICTIONARY,
+    HILL
+};
+
 class Cipher {
 public:
 
@@ -19,7 +26,9 @@ public:
     /// @return it will return the decrypted original password
     virtual std::string decrypt(const std::string& pass) const = 0;
 
-    virtual std::string getType() const = 0;
+    virtual CipherType getType() const = 0;
+    virtual std::string getConfig() const = 0;
+    virtual void setConfig(const std::string& config) = 0;
 
     /// @brief checks if the text containsChar only chars from 32 to 126  
     /// @param text this text will be checked 

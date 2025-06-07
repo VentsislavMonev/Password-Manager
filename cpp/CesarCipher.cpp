@@ -1,7 +1,7 @@
 #include "CesarCipher.hpp"
 #include <stdexcept>
 
-CesarCipher::CesarCipher(short _shift)
+CesarCipher::CesarCipher(int _shift)
 {
     setShift(_shift);
 }
@@ -13,7 +13,7 @@ std::string CesarCipher::encrypt(const std::string &text) const
 
     std::string result = "";
 
-    for (size_t i = 0; i < text.size(); i++)
+    for (size_t i = 0; i < text.size(); ++i)
     {
         result+=ShiftChar(text[i], shift);
     }
@@ -27,29 +27,29 @@ std::string CesarCipher::decrypt(const std::string &pass) const
 
     std::string result = "";
 
-    for (size_t i = 0; i < pass.size(); i++)
+    for (size_t i = 0; i < pass.size(); ++i)
     {
         result+=ShiftChar(pass[i], -shift);
     }
     return result;
 }
 
-std::string CesarCipher::getType() const
+CipherType CesarCipher::getType() const
 {
-    return "Cesar";
+    return CipherType::CESAR;
 }
 
-short CesarCipher::getShift() const
+int CesarCipher::getShift() const
 {
     return shift;
 }
 
-void CesarCipher::setShift(short _shift)
+void CesarCipher::setShift(int _shift)
 {
     shift = mod(_shift);
 }
 
-char CesarCipher::ShiftChar(char c, short offset) const
+char CesarCipher::ShiftChar(char c, int offset) const
 {
     // this is the code if i have to shift only letters
 
@@ -76,8 +76,18 @@ char CesarCipher::ShiftChar(char c, short offset) const
     else return c;
 }
 
-short CesarCipher::mod(short a) const
+int CesarCipher::mod(int a) const
 {
-    const short allowedSymbolsCount = '~' - ' '; 
+    const int allowedSymbolsCount = '~' - ' '; 
     return (a % allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount;
+}
+
+std::string CesarCipher::getConfig() const
+{
+    return std::to_string(shift);
+}
+
+void CesarCipher::setConfig(const std::string &config)
+{
+    setShift(std::stoi(config));
 }
