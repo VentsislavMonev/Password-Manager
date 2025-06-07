@@ -1,10 +1,16 @@
 #include "HillCipher.hpp"
-#include <iostream>
+#include <stdexcept>
+#include <cstdlib>
 
-HillCipher::HillCipher(const SquaredMatrix_zn &_keyMatrix) : fill('\0')
+HillCipher::HillCipher(const SquaredMatrix_zn &_keyMatrix) 
 {
     if(_keyMatrix.getDimension()<3)
         throw std::invalid_argument("Key matrix must be with dimension bigger than 3 !");
+    if(_keyMatrix.getModNumber()!=' '-'~')
+        throw std::invalid_argument("Key matrix must be from Z_"+ std::to_string(_keyMatrix.getModNumber()));
+    if(!_keyMatrix.isInvertible())
+        throw std::invalid_argument("Key matrix must be invertible!");
+
     keyMatrix = _keyMatrix;
     invertedMatrix = keyMatrix.getInverseMatrix();
 }
@@ -19,8 +25,7 @@ std::string HillCipher::encrypt(const std::string &text) const
     encryptedPass += getRemainingPassword(text, keyMatrix);
     
     // Prepend length header. 4 bytes for length
-    size_t originalLength = text.length();
-    std::string lengthHeader = encodeLengthHeader(originalLength);
+    std::string lengthHeader = encodeLengthHeader(text.length());
     
     return lengthHeader + encryptedPass;
 }
@@ -42,7 +47,6 @@ std::string HillCipher::decrypt(const std::string &pass) const
         c+=' ';
     }
     
-    // Return only the original length (removes padding automatically)
     if(originalLength > decrypted.length())
         throw std::invalid_argument("Invalid length header - corrupted data!");
     
@@ -122,11 +126,12 @@ std::string HillCipher::getRemainingPassword(const std::string& text, const Squa
         current.push_back(text[i]-' ');
     }
 
+    char filll = static_cast<unsigned char>(rand() % 256);
     // Fill the rest with fictive symbols so it can do the matrix multiplication
     for (size_t i = remain; i < matrixSize; ++i)
     {
         // TODO Maybe add different things instead of only fill symbols 
-        current.push_back(fill);
+        current.push_back(filll);
     }
     encryptedPass+= multiplyMatrixWithString(current, keyMatrix);
 

@@ -3,8 +3,6 @@
 
 #include "Cipher.hpp"
 #include "SquaredMatrix_zn.hpp"
-#include <vector>
-#include <stdexcept>
 
 class HillCipher : public Cipher
 {
@@ -28,7 +26,6 @@ private:
 private:
     SquaredMatrix_zn keyMatrix;
     SquaredMatrix_zn  invertedMatrix;
-    char fill;
 };
 
 #endif
