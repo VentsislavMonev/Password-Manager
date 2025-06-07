@@ -6,7 +6,7 @@ HillCipher::HillCipher(const SquaredMatrix_zn &_keyMatrix)
 {
     if(_keyMatrix.getDimension()<3)
         throw std::invalid_argument("Key matrix must be with dimension bigger than 3 !");
-    if(_keyMatrix.getModNumber()!=' '-'~')
+    if(_keyMatrix.getModNumber()-1!='~' - ' ')
         throw std::invalid_argument("Key matrix must be from Z_"+ std::to_string(_keyMatrix.getModNumber()));
     if(!_keyMatrix.isInvertible())
         throw std::invalid_argument("Key matrix must be invertible!");
