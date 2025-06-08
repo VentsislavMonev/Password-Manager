@@ -88,5 +88,6 @@ std::string CesarCipher::getConfig() const
 
 void CesarCipher::setConfig(const std::string &config)
 {
+    if(config[0]<'0'&&config[0]>'9') throw std::invalid_argument("Invalid Cesar cipher config");
     setShift(std::stoi(config));
 }

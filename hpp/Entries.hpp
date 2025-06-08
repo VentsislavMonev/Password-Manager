@@ -7,8 +7,6 @@
 class Entries
 {
 public:
-
-public:
     void add(const Entry& entry);
     
     // TODO da vidq dali da vrushta direktno Entries instanciq
