@@ -26,6 +26,7 @@ int main()
             std::cout<<(int)result[i]<<std::endl;
         }
         std::cout<<aloda.decrypt(result)<<std::endl;
+        std::cout<<aloda.getConfig()<<std::endl;
         std::cout<<aloda.decrypt(result1)<<std::endl;
     }
     catch(const std::exception& e)
@@ -43,6 +44,7 @@ int main()
 
     std::cout<<fellas.encrypt("abc")<<std::endl<< fellas.decrypt("def") << std::endl;
     std::cout<<hellas.encrypt("456")<<std::endl<< hellas.decrypt("123") << std::endl<<std::endl;
+    std::cout<< fellas.getConfig()<<std::endl;
 
     try
     {
@@ -136,7 +138,20 @@ int main()
         std::cout << "\"" << ivPass << "\"" << std::endl;
         std::cout << iv.getConfig() << std::endl;
         ivVI.setConfig(iv.getConfig());
-        std::cout << ivVI.getConfig() << std::endl;
+        std::cout << ivVI.getConfig() <<'\n'<< std::endl;
+
+
+        // createCipher test
+        //
+        Cipher* nenko = Cipher::createCipher(CipherType::HILL, iv.getConfig());
+        Cipher* nenko1 = Cipher::createCipher(CipherType::CESAR, fellas.getConfig());
+        std::cout<< nenko->getConfig()<<std::endl;
+        std::cout<< nenko1->getConfig()<<std::endl;
+
+        Cipher* rado = Cipher::createCipher("HILL",iv.getConfig());
+        std::cout<< rado->decrypt(rado->encrypt("zmei"))<<std::endl;
+
+
 
         
     }
@@ -148,5 +163,12 @@ int main()
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Time taken: " << duration.count() << " seconds"<<std::endl;
+
+
+
+    
+    
+    
+    
     return 0;
 }

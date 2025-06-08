@@ -7,14 +7,14 @@
 class HillCipher : public Cipher
 {
 public:
-    HillCipher(const SquaredMatrix_zn& _keyMatrix);
+    HillCipher(const SquaredMatrix_zn& _keyMatrix = SquaredMatrix_zn({{1,0,0},{0,1,0},{0,0,1}}, 3, '~' - ' ' + 1));
 
 public:
     virtual std::string encrypt(const std::string& text) const override;
     virtual std::string decrypt(const std::string& pass) const override;
     virtual CipherType getType() const override;
     virtual std::string getConfig() const;
-    virtual void setConfig(const std::string& config);
+    virtual void setConfig(const std::string& config); 
 
 private:
     std::string multiplyMatrixWithString(const std::string& text, const SquaredMatrix_zn& matrix)const;

@@ -2,6 +2,7 @@
 #define CIPHER_HPP
 
 #include <string>
+#include <stdexcept>
 
 enum class CipherType 
 {
@@ -10,11 +11,15 @@ enum class CipherType
     HILL
 };
 
+
 class Cipher {
 public:
 
     Cipher() = default;
     virtual ~Cipher() = default;
+
+    static Cipher* createCipher(CipherType cipherType, const std::string& cipherConfig);
+    static Cipher* createCipher(const std::string& cipherTypeStr, const std::string& cipherConfig);
 
     /// @brief function that encrypt passwords in the cipher classes
     /// @param text this text will be encrypted
@@ -27,6 +32,7 @@ public:
     virtual std::string decrypt(const std::string& pass) const = 0;
 
     virtual CipherType getType() const = 0;
+    std::string getTypeString() const;
     virtual std::string getConfig() const = 0;
     virtual void setConfig(const std::string& config) = 0;
 
@@ -35,10 +41,9 @@ public:
     /// @return it will return true if the text meets the before said conditions and else it will return false
     bool validate(const std::string& text)const;
 
-    //serialize
-    //deserialize
-
 private:
+    static CipherType typeFromString(const std::string& str);
+    static std::string typeToString(CipherType type);
 };
 
 #endif

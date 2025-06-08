@@ -6,7 +6,7 @@
 class CesarCipher: public Cipher
 {
 public:
-    CesarCipher(int _shift);
+    CesarCipher(int _shift = 0);
 
 public:
 

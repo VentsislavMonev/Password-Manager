@@ -9,7 +9,7 @@ class DictionaryCipher : public Cipher
 public:
     /// @brief it fills the dictionary by a given text and  makes sure it doesnt have duplicates
     /// @param _dictionaryText the text from which the dictionary will be filled
-    DictionaryCipher(const std::string& _dictionaryText);
+    DictionaryCipher(const std::string& _dictionaryText = "default");
 
 public:
 

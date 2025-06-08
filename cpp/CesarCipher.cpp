@@ -1,5 +1,4 @@
 #include "CesarCipher.hpp"
-#include <stdexcept>
 
 CesarCipher::CesarCipher(int _shift)
 {
@@ -80,7 +79,7 @@ int CesarCipher::mod(int a) const
 {
     const int allowedSymbolsCount = '~' - ' '; 
     return (a % allowedSymbolsCount + allowedSymbolsCount) % allowedSymbolsCount;
-}
+} 
 
 std::string CesarCipher::getConfig() const
 {

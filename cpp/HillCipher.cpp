@@ -1,5 +1,4 @@
 #include "HillCipher.hpp"
-#include <stdexcept>
 #include <cstdlib>
 
 HillCipher::HillCipher(const SquaredMatrix_zn &_keyMatrix) 
@@ -203,6 +202,7 @@ void HillCipher::setConfig(const std::string &config)
         size_t nextComma = matrixString.find(',', pos);
         if (nextComma == std::string::npos) nextComma = matrixStringLength;
         
+        // checks if the config is invalid
         if(config[pos]<'0' ||config[pos]>'9') throw std::runtime_error("Invalid Hill cipher config format");
 
         configMatrix[row][col] = std::stoi(matrixString.substr(pos, nextComma - pos));

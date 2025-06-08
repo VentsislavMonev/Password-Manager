@@ -1,5 +1,4 @@
 #include "DictionaryCipher.hpp"
-#include <stdexcept>
 
 void DictionaryCipher::setDictionary(const std::string& textDictionary)
 {
