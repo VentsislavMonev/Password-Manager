@@ -12,33 +12,46 @@ Entry::Entry() : website("Default_Website"), username("Default_Username"), encry
 
 void Entry::setWebsite(const std::string &_website)
 {
-    if(!validateEntryText(_website))
+    if(!UTILITIES::validateString(_website) || _website.length()==0)
         throw std::invalid_argument("Invalid entry website!");
     website=_website;
 }
 
 void Entry::setUsername(const std::string &_username)
 {
-    if(!UTILITIES::validateString(_username))
+    if(!UTILITIES::validateString(_username) || _username.length()==0)
         throw std::invalid_argument("Invalid entry username!");
     username=_username;
 }
+// TODO da izpolzvam tuk Cipher::validate?
 
 void Entry::setEncryptedPassword(const std::string& _encryptedPassword)
 {
+    if(_encryptedPassword.length()==0)
+        throw std::invalid_argument("Encrypted password cannot be empty!");
     encryptedPassword=_encryptedPassword;
 }
 
-bool Entry::validateEntryText(const std::string &_website) const
+bool Entry::operator==(const Entry &other) const
 {
-    size_t length = _website.length();
-    for (size_t i = 0; i < length; i++)
-    {
-        if(_website[i]<'!' || _website[i]> '~')
-            return false;
-    }
-    return true;
+    return (website==other.website&&username==other.username&& encryptedPassword==other.encryptedPassword) ;
 }
+
+bool Entry::operator!=(const Entry &other) const
+{
+    return !(*this==other);
+}
+
+// bool Entry::validateEntryText(const std::string &_website) const
+// {
+//     size_t length = _website.length();
+//     for (size_t i = 0; i < length; i++)
+//     {
+//         if(_website[i]<'!' || _website[i]> '~')
+//             return false;
+//     }
+//     return true;
+// }
 
 std::ostream &operator<<(std::ostream &os, const Entry &entry)
 {
@@ -50,13 +63,13 @@ std::ostream &operator<<(std::ostream &os, const Entry &entry)
 
 std::istream &operator>>(std::istream &is, Entry &entry)
 {
-    std::string a,b,c, div;
-    std::getline(is, a);
-    std::getline(is, b);
-    std::getline(is, c);
+    std::string website,username,encryptedPasword;
+    std::getline(is, website);
+    std::getline(is, username);
+    std::getline(is, encryptedPasword);
     try
     {
-        Entry temp(a,b,c);
+        Entry temp(website,username,encryptedPasword);
         entry = temp;
     }
     catch(const std::exception& e)

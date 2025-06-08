@@ -62,30 +62,53 @@ int main()
     
     // Entries
     //
-    Entry vhod("pei.com", "pei40", "oomf");
-    vhod.setEncryptedPassword("def");
-    std::cout<<fellas.decrypt(vhod.getEncryptedPassword())<<std::endl;
+    Entry vhod1("pei.com", "pei40", "oomf");
+    Entry vhod2("pei.com", "40pei", "daddycool");
+    Entry vhod3("pei.com (noviq)", "qvorov", "oomf");
+    vhod1.setEncryptedPassword("def");
+    std::cout<<fellas.decrypt(vhod1.getEncryptedPassword())<<std::endl;
     // std::cin>>vhod;
-    std::cout<<vhod;
+    std::cout<<vhod1;
 
     try
     {
         Entries vhodove;
-        vhodove.push_back(vhod);
+        vhodove.add(vhod1);
+        vhodove.add(vhod1);
+        vhodove.add(vhod1);
+        vhodove.add(vhod2);
+        vhodove.add(vhod3);
 
-        Entries copy(vhodove);
-
-        Entries test; 
-        test.push_back(vhod);
-        test.push_back(vhod);
-        test.push_back(vhod);
-
-        test = copy;
+        vhodove.add(vhod2);
+        std::vector<Entry> resu = vhodove.getEncryptedPassword("pei.com");
+        vhodove.remove("pei.com", "pei40");
+        vhodove.add(vhod1);
+        std::cout<<vhodove.remove(vhod1)<<std::endl;
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
     }
+    
+
+    // try
+    // {
+    //     Entries vhodove;
+    //     vhodove.push_back(vhod);
+
+    //     Entries copy(vhodove);
+
+    //     Entries test; 
+    //     test.push_back(vhod);
+    //     test.push_back(vhod);
+    //     test.push_back(vhod);
+
+    //     test = copy;
+    // }
+    // catch(const std::exception& e)
+    // {
+    //     std::cerr << e.what() << '\n';
+    // }
     
     
     // Matrix
@@ -162,6 +185,7 @@ int main()
     
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
+    std::cout<<(char)244<<'\n'<< (char)245<<std::endl;
     std::cout << "Time taken: " << duration.count() << " seconds"<<std::endl;
 
 

@@ -1,95 +1,124 @@
 #include "Entries.hpp"
 
-Entries::Entries() : entries(nullptr), size(0) {entries = new Entry[size];}
-
-Entries::Entries(const Entries &other): Entries()
+void Entries::add(const Entry &entry)
 {
-    Entry* temp = nullptr;
-    try
+    size_t length = entries.size();
+    for (size_t i = 0; i < length; ++i)
     {
-        temp =  new Entry[other.size];
-        for (size_t i = 0; i < other.size; i++)
+        if (entries[i] == entry) 
         {
-            temp[i] = other.entries[i];
+            return;
         }
     }
-    catch(const std::exception& e)
-    {
-        delete[] temp;
-        std::cerr << e.what() << '\n';
-    }
-
-    entries = temp;
-    size = other.size;
+    entries.push_back(entry);
 }
 
-Entries &Entries::operator=(const Entries &other)
+const std::vector<Entry> Entries::getEncryptedPassword(const std::string &website, const std::string &username)
 {
-    if(this!= &other)
+    std::vector<Entry> result;
+    if(username.length()!=0)
     {
-        Entry* temp = nullptr;
-        try
+        size_t length = entries.size();
+        for (size_t i = 0; i < length; ++i)
         {
-            temp = new Entry[other.size];
-            for (size_t i = 0; i < other.size; i++)
+            if(entries[i].getWebsite()==website && entries[i].getUsername()==username)
             {
-                temp[i] = other.entries[i];
+                result.push_back(entries[i]);
+                return result;
             }
         }
-        catch(const std::exception& e)
-        {
-            delete[] temp;
-            std::cerr << e.what() << '\n';
-        }
-        delete[] entries;
-        entries = temp;
-        size = other.size;        
+        throw std::runtime_error("There hasnt been set an user for this website");
     }
-    return *this;
+    else 
+    {
+        size_t length = entries.size();
+        for (size_t i = 0; i < length; ++i)
+        {
+            if(entries[i].getWebsite()==website)
+            {
+                result.push_back(entries[i]);
+            }
+        }
+        if(result.empty())
+            throw std::runtime_error("There arent any entries for this website");
+        return result;
+    }
 }
 
-Entries::~Entries()
+bool Entries::remove(const Entry &entry)
 {
-    erase();
+    size_t length = entries.size();
+    for (size_t i = 0; i < length; ++i)
+    {
+        if(entries[i]==entry)
+        {
+            entries.erase(entries.begin() + i);
+            return true;
+        }
+    }
+    return false;   
 }
 
-Entry &Entries::operator[](size_t i)
+bool Entries::remove(const std::string &website, const std::string &username)
 {
-    if(i>= size) throw std::out_of_range("Out of range in entries!");
-    return entries[i];
+    bool isSuccesful = false;
+    if(username.length()!=0)
+    {
+        size_t length = entries.size();
+        for (size_t i = 0; i < length; ++i)
+        {
+            if(entries[i].getWebsite()==website && entries[i].getUsername()==username)
+            {
+                entries.erase(entries.begin() + i);
+                isSuccesful=true;
+                break;
+            }
+        }
+        
+    }
+    else 
+    {
+        size_t length = entries.size();
+        for (size_t i = 0; i < length;)
+        {
+            if (entries[i].getWebsite() == website)
+            {
+                entries.erase(entries.begin() + i);
+                isSuccesful=true;
+            } 
+            else 
+            {
+                ++i; 
+            }
+        }
+    }
+    return isSuccesful;
+}
+
+void Entries::update(const std::string &website, const std::string &username, const std::string &encryptedPassword)
+{
+    size_t length = entries.size();
+    for (size_t i = 0; i < length; ++i)
+    {
+        if(entries[i].getWebsite()==website && entries[i].getUsername()==username)
+        {
+            if(entries[i].getEncryptedPassword() == encryptedPassword)
+                throw std::runtime_error("New password is the same as the old one!");
+            entries[i].setEncryptedPassword(encryptedPassword);
+            return;
+        }
+    }
+    throw std::runtime_error("There isnt set a password fot this user for this website");
+}
+
+Entry& Entries::operator[](size_t i)
+{
+    if(i>= entries.size()) throw std::out_of_range("Out of range in entries!");
+        return entries[i];
 }
 
 const Entry& Entries::operator[](size_t i) const
 {
-    if(i>= size) throw std::out_of_range("Out of range in entries!");
-    return entries[i];
-}
-
-void Entries::push_back(Entry &entry)
-{
-    Entry* temp = nullptr;
-    try
-    {
-        temp = new Entry[size+1];
-        for (size_t i = 0; i < size; i++)
-        {
-            temp[i] = entries[i];
-        }
-        temp[size] = entry;
-    }
-    catch(const std::exception& e)
-    {
-        delete[] temp;
-        std::cerr << e.what() << '\n';
-    }
-    delete[] entries;
-    entries=temp;
-    ++size;
-}
-
-void Entries::erase()
-{
-    delete[] entries;
-    entries = nullptr;
-    size=0;
+    if(i>= entries.size()) throw std::out_of_range("Out of range in entries!");
+        return entries[i];
 }

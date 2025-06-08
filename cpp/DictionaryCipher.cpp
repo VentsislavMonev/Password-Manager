@@ -14,8 +14,10 @@ void DictionaryCipher::setDictionary(const std::string& textDictionary)
 
 void DictionaryCipher::insertUnique(char value)
 {
-    for (char v : dictionary) {
-        if (v == value) {
+    for (char v : dictionary) 
+    {
+        if (v == value) 
+        {
             return;
         }
     }
