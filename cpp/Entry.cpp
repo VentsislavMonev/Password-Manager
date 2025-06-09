@@ -1,11 +1,19 @@
 #include "Entry.hpp"
 #include "Utility.hpp"
 
-Entry::Entry(const std::string &_website, const std::string &_username, const std::string &_encryptedPassword)
+Entry::Entry(const std::string &_website, const std::string &_username, const std::string &_encryptedPassword, char _delimeter) : delimeter(_delimeter)
 {
     setWebsite(_website);
     setUsername(_username);
     setEncryptedPassword(_encryptedPassword);
+}
+
+Entry::Entry(const std::vector<std::string> &vec)
+{
+    if(vec.size()!=3) throw std::invalid_argument("Invalid entry vector!");
+    setWebsite(vec[0]);
+    setUsername(vec[1]);
+    setEncryptedPassword(vec[2]);
 }
 
 Entry::Entry() : website("Default_Website"), username("Default_Username"), encryptedPassword("Default_Encrypted_Password"){}
@@ -55,27 +63,31 @@ bool Entry::operator!=(const Entry &other) const
 
 std::ostream &operator<<(std::ostream &os, const Entry &entry)
 {
-    os<<entry.website<<"\n";
-    os<<entry.username<<"\n";
-    os<<entry.encryptedPassword<<std::endl;
+    os<<entry.website<< entry.delimeter <<entry.username<< entry.delimeter <<entry.encryptedPassword<< entry.delimeter <<'\n';
     return os;
 }
 
 std::istream &operator>>(std::istream &is, Entry &entry)
 {
-    std::string website,username,encryptedPasword;
-    std::getline(is, website);
-    std::getline(is, username);
-    std::getline(is, encryptedPasword);
-    try
-    {
-        Entry temp(website,username,encryptedPasword);
-        entry = temp;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << ""<<'\n';
-    }
-    
+    std::string line;
+    if (!std::getline(is, line))
+        return is;
+
+    if (line.empty())
+        return is;
+
+    entry.delimeter = line.back();
+
+    size_t first = line.find(entry.delimeter);
+    size_t second = line.find(entry.delimeter, first + 1);
+    size_t third = line.find(entry.delimeter, second + 1);
+
+    if (first == std::string::npos || second == std::string::npos || third == std::string::npos)
+        return is;
+
+    entry.website = line.substr(0, first);
+    entry.username = line.substr(first + 1, second - first - 1);
+    entry.encryptedPassword = line.substr(second + 1,third - second- 1);
+
     return is;
 }

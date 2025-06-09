@@ -5,6 +5,8 @@
 
 bool validateString(const std::string& string)
 {
+    if(string.length()==0) return false;
+
     char first =' ';
     char last ='~';
     size_t length = string.length();

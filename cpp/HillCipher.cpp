@@ -78,6 +78,7 @@ bool HillCipher::validateDecrypt(const std::string &text) const
     size_t length = text.length();
     for (size_t i = 4; i < length; ++i)  // Skip the header where length is stored
     {
+        
         if(text[i] < 0 || text[i] >= keyMatrix.getModNumber())
             return false;
     }
@@ -127,7 +128,7 @@ std::string HillCipher::getRemainingPassword(const std::string& text, const Squa
     // Fill the rest with fictive symbols so it can do the matrix multiplication
     for (size_t i = remain; i < matrixSize; ++i)
     {
-        char fill = static_cast<unsigned char>(rand() % '~' - ' ');
+        char fill = static_cast<unsigned char>(rand() % ('~' - ' '));
         current.push_back(fill);
     }
     encryptedPass+= multiplyMatrixWithString(current, keyMatrix);

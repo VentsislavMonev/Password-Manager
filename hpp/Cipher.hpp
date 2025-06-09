@@ -20,7 +20,7 @@ public:
 
     static Cipher* createCipher(CipherType cipherType, const std::string& cipherConfig);
     static Cipher* createCipher(const std::string& cipherTypeStr, const std::string& cipherConfig);
-
+    
     /// @brief function that encrypt passwords in the cipher classes
     /// @param text this text will be encrypted
     /// @return it will return the encrypted text
@@ -40,7 +40,7 @@ public:
     /// @param text this text will be checked 
     /// @return it will return true if the text meets the before said conditions and else it will return false
     bool validate(const std::string& text)const;
-
+    
 private:
     static CipherType typeFromString(const std::string& str);
     static std::string typeToString(CipherType type);

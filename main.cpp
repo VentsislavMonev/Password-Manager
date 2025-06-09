@@ -4,6 +4,7 @@
 #include "Entry.hpp"
 #include "Entries.hpp"
 #include "SquaredMatrix_zn.hpp"
+#include "PasswordFile.hpp"
 #include <string>
 #include <iostream>
 #include <cstdlib>
@@ -145,23 +146,23 @@ int main()
     {
 
         SquaredMatrix_zn aa({{1,2,3},{0,1,3},{0,0,1}},3,95);
-        HillCipher ivVI(aa);
+        HillCipher ivVI(a);
         HillCipher iv(a);
         std::string ivString = iv.encrypt(text);
         std::string ivPass = iv.decrypt(ivString);
 
-        // std::cout << "\"";
-        // for (size_t i = 0; i < ivString.size(); i++)
-        // {
-        //     std::cout<<i+1<<"."<< (int)ivString[i]<<" - ";
-        // }
-        // std::cout<<"\"   -   " << ivString.size() << std::endl;
+        // // std::cout << "\"";
+        // // for (size_t i = 0; i < ivString.size(); i++)
+        // // {
+        // //     std::cout<<i+1<<"."<< (int)ivString[i]<<" - ";
+        // // }
+        // // std::cout<<"\"   -   " << ivString.size() << std::endl;
         
-        // std::cout << "\""<< ivString << "\"   -   " << ivString.size() << std::endl;
+        // // std::cout << "\""<< ivString << "\"   -   " << ivString.size() << std::endl;
         std::cout << "\"" << ivPass << "\"" << std::endl;
         std::cout << iv.getConfig() << std::endl;
         ivVI.setConfig(iv.getConfig());
-        std::cout << ivVI.getConfig() <<'\n'<< std::endl;
+        std::cout << iv.getConfig() <<'\n'<< std::endl;
 
 
         // createCipher test
@@ -173,19 +174,31 @@ int main()
 
         Cipher* rado = Cipher::createCipher("HILL",iv.getConfig());
         std::cout<< rado->decrypt(rado->encrypt("zmei"))<<std::endl;
-
-
-
         
     }
     catch(const std::exception& e)
     {
         std::cout << e.what() << std::endl;
     }
+
+    try
+    {
+        // PasswordFile::createFile("zlodei","CESAR", "3","CESAR", "33");
+        // PasswordFile razdvatrii("zlodei","CESAR", "33");
+        HillCipher iv(a);
+        PasswordFile::createFile("lub4o", "CESAR", "3", "HILL", iv.getConfig());
+
+        PasswordFile blackMidi ("lub4o", "HILL", iv.getConfig());
+        blackMidi.save("twitter.com", "shpenci", "mnogo taina parola");
+        
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
     
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout<<(char)244<<'\n'<< (char)245<<std::endl;
     std::cout << "Time taken: " << duration.count() << " seconds"<<std::endl;
 
 
