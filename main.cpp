@@ -186,9 +186,9 @@ int main()
         // PasswordFile::createFile("zlodei","CESAR", "3","CESAR", "33");
         // PasswordFile razdvatrii("zlodei","CESAR", "33");
         HillCipher iv(a);
-        PasswordFile::createFile("lub4o", "CESAR", "3", "HILL", iv.getConfig());
+        // PasswordFile::createFile("zlodei", "CESAR", "3", "HILL", iv.getConfig());
 
-        PasswordFile blackMidi ("lub4o", "HILL", iv.getConfig());
+        PasswordFile blackMidi ("zlodei", "HILL", iv.getConfig());
         blackMidi.save("twitter.com", "shpenci", "mnogo taina parola");
         
     }
@@ -199,13 +199,7 @@ int main()
     
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Time taken: " << duration.count() << " seconds"<<std::endl;
-
-
-
-    
-    
-    
+    std::cout << "Time taken: " << duration.count() << " seconds"<<std::endl;    
     
     return 0;
 }

@@ -1,7 +1,7 @@
 #include "PasswordFile.hpp"
 #include <fstream>
 
-PasswordFile::PasswordFile(const std::string &_fileName, const std::string& fileCipherType, const std::string &fileCipherConfig) : passwordCipher(nullptr), fileCipher(nullptr)
+PasswordFile::PasswordFile(const std::string &_fileName, const std::string& fileCipherType, const std::string &fileCipherConfig) : passwordCipher(nullptr), fileCipher(nullptr), isChanged(false)
 {
     validateFileName(_fileName);
     fileName = _fileName;
@@ -10,17 +10,20 @@ PasswordFile::PasswordFile(const std::string &_fileName, const std::string& file
     
     setFileCipher(fileCipherType,fileCipherConfig);
 
-
-    // TODO to check if the positions is valid 
     size_t pos = encryptedContent.find('\n');
-    std::string decryptedHeader = fileCipher->decrypt(encryptedContent.substr(0, pos));
+    if(pos == std::string::npos) pos=encryptedContent.length();
+    std::string encryptedHeader = encryptedContent.substr(0,pos);
+    std::string decryptedHeader = fileCipher->decrypt(encryptedHeader);
     size_t firstDelimeterPos = decryptedHeader.find('|');
     std::string passwordCipherString = decryptedHeader.substr(0,firstDelimeterPos);
     std::string passwordCipherConfig = decryptedHeader.substr(firstDelimeterPos+1);
 
     setPasswordCipher(passwordCipherString, passwordCipherConfig);
 
-    std::string encryptedData = encryptedContent.substr(decryptedHeader.size()+1);
+    if(encryptedHeader.length()+1 > encryptedContent.length()) 
+        return;
+
+    std::string encryptedData = encryptedContent.substr(encryptedHeader.size()+1);
     std::vector<std::string> lines = split(encryptedData, '\n');
     size_t size = lines.size();
     for (size_t i = 0; i < size; i++)
@@ -78,7 +81,96 @@ void PasswordFile::update(const std::string &website, const std::string &usernam
     data.update(website,username,newPassword);
 }
 
-void PasswordFile::createFile(const std::string &_fileName, const std::string& passwordCipherType, const std::string &passwordCipherConfig, const std::string& fileCipherType, const std::string &fileCipherConfig)
+bool PasswordFile::saveToFile() const
+{
+    if (!isChanged)
+    {
+        return true; 
+    }
+
+
+    std::string tempFile = fileName + ".tmp";
+    std::string backupFile = fileName + ".backup";
+    
+    std::string header = passwordCipher->getTypeString()+'|'+passwordCipher->getConfig();
+    std::string encryptedHeader = fileCipher->encrypt(header) + '\n';
+    std::string encryptedContent = encryptedHeader + serializeData();
+
+    std::ofstream outFile(tempFile);
+    if (!outFile) {
+        throw std::runtime_error("File is bad!");
+    }
+    
+    outFile << encryptedContent;
+    outFile.flush();
+    
+    if (outFile.fail()) {
+        throw std::runtime_error("Failed to write to temporary file");
+    }
+
+    if (fileExists(fileName)) {
+        if (!copyFile(fileName, backupFile)) {
+            removeFile(tempFile);
+            throw std::runtime_error("Failed to create backup");
+        }
+    }
+    
+    if (!renameFile(tempFile, fileName)) {
+        if (fileExists(backupFile)) {
+            if (!renameFile(backupFile, fileName)) {
+                throw std::runtime_error("Critical error: Failed to save and restore backup");
+            }
+        }
+        throw std::runtime_error("Failed to replace original file");
+    }
+    
+    removeFile(backupFile);
+    try 
+    {
+        std::string tempFile = fileName + ".tmp";
+        std::string backupFile = fileName + ".backup";
+        
+        std::string header = passwordCipher->getTypeString()+'|'+passwordCipher->getConfig();
+        std::string encryptedHeader = fileCipher->encrypt(header) + '\n';
+        std::string encryptedContent = encryptedHeader + serializeData();
+
+        std::ofstream outFile(tempFile, std::ios::binary);
+        if (!outFile) {
+            throw std::runtime_error("File is bad!");
+        }
+        
+        outFile << encryptedContent;
+        if (!outFile) {
+            removeFile(tempFile);
+            throw std::runtime_error("Failed to write to temp file");
+        }
+        outFile.close();
+    
+        if (fileExists(fileName)) {
+            if (!copyFile(fileName, backupFile)) {
+                removeFile(tempFile);
+                throw std::runtime_error("Failed to create backup");
+            }
+        }
+
+        if (!renameFile(tempFile, fileName)) {
+            removeFile(tempFile);
+            throw std::runtime_error("Failed to replace original file");
+        }
+
+        removeFile(backupFile);
+        
+        return true;
+    }
+    catch (...) {
+        if (fileExists(tempFile)) removeFile(tempFile);
+        throw;
+    }
+    
+    return true;
+}
+
+void PasswordFile::createFile(const std::string &_fileName, const std::string &passwordCipherType, const std::string &passwordCipherConfig, const std::string &fileCipherType, const std::string &fileCipherConfig)
 {
     if(_fileName.empty())
         throw std::invalid_argument("Cannot create a file with empty username!");
@@ -125,7 +217,7 @@ void PasswordFile::createFile(const std::string &_fileName, const std::string& p
     }
     
     
-    file << encryptedContent;
+    file << encryptedContent<<'\n';
     if(!file.good())
     {
         delete passwordCipher;
@@ -150,7 +242,7 @@ void PasswordFile::validateFileName(const std::string& _fileName)
 std::string PasswordFile::getStringFromFile(const std::string &_fileName)
 {
     std::ifstream file(_fileName, std::ios::binary);
-    if (!file.is_open()) {
+    if (!file) {
         throw std::runtime_error("File is bad!");
     }
     
@@ -170,7 +262,7 @@ void PasswordFile::writeFileContent(const std::string& content) const
     std::string encryptedContent = fileCipher->encrypt(content);
     
     std::ofstream file(fileName);
-    if (!file.is_open()) 
+    if (!file) 
     {
         throw std::runtime_error("File is bad!");
     }
@@ -196,6 +288,56 @@ std::vector<std::string> PasswordFile::split(const std::string &str, char delimi
     
     return tokens;
 }
+
+// TODO to try catch if anything and see how to handle it
+std::string PasswordFile::serializeData()const
+{
+    std::string result ="";
+    size_t count = data.getSize();
+    for (size_t i = 0; i < count; i++)
+    {
+        result = result + 
+            fileCipher->encrypt(data[i].getWebsite()) + data[i].getDelimetere() +
+            fileCipher->encrypt(data[i].getUsername()) + data[i].getDelimetere() +
+            fileCipher->encrypt(data[i].getEncryptedPassword()) + data[i].getDelimetere()+ data[i].getDelimetere() + '\n';
+    }
+    return result;
+}
+
+bool PasswordFile::copyFile(const std::string& source, const std::string& destination) const
+{
+    std::ofstream destinationFile(destination);
+    if (!destinationFile) {
+        return false;
+    }
+    
+    try
+    {
+        std::string content = getStringFromFile(source);
+        destinationFile << content;
+        destinationFile.flush();
+    }
+    catch(const std::exception& e)
+    {
+        return false;
+    }
+
+    bool result = destinationFile.good();
+    destinationFile.close();
+
+    return result;
+}
+
+bool PasswordFile::renameFile(const std::string& oldName, const std::string& newName) const
+{
+    return std::rename(oldName.c_str(), newName.c_str()) == 0;
+}
+
+bool PasswordFile::removeFile(const std::string& filename) const
+{
+    return std::remove(filename.c_str()) == 0;
+}
+
 
 
 void PasswordFile::setFileCipher(const std::string &fileCipherType, const std::string &fileCipherConfig)

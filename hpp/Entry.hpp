@@ -20,6 +20,7 @@ public:
     const std::string& getWebsite()const { return website;}
     const std::string& getUsername()const { return username;}
     const std::string& getEncryptedPassword()const { return encryptedPassword;}
+    char getDelimetere()const {return delimeter;}
 
     friend std::ostream& operator<<(std::ostream& os, const Entry& entry);
     friend std::istream& operator>>(std::istream& is, Entry& entry);
