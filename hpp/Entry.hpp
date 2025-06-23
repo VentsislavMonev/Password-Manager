@@ -10,7 +10,7 @@ class Entry
 {
 public:
     Entry();
-    Entry(const std::string& _website, const std::string& _username, const std::string& _encryptedPassword, char _delimeter=255);
+    Entry(const std::string& _website, const std::string& _username, const std::string& _encryptedPassword, char _delimeter=-1);
     Entry(const std::vector<std::string>& vec);
 
     void setWebsite(const std::string& _website);

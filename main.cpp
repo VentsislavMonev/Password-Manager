@@ -183,14 +183,24 @@ int main()
 
     try
     {
-        // PasswordFile::createFile("zlodei","CESAR", "3","CESAR", "33");
-        // PasswordFile razdvatrii("zlodei","CESAR", "33");
         HillCipher iv(a);
-        // PasswordFile::createFile("zlodei", "CESAR", "3", "HILL", iv.getConfig());
 
-        PasswordFile blackMidi ("zlodei", "HILL", iv.getConfig());
-        blackMidi.save("twitter.com", "shpenci", "mnogo taina parola");
+        // PasswordFile::createFile("hill.txt", "CESAR", "3", "HILL", iv.getConfig());
+        PasswordFile::openFile("hill.txt", "HILL", iv.getConfig());
         
+        // PasswordFile::createFile("zlodeii.txt", "CESAR", "3", "CESAR", "3");
+        // PasswordFile::openFile("zlodeii.txt", "CESAR", "3");
+  
+        // PasswordFile::getInstance().save("google.com", "Vencislav Monev", "456");
+        // PasswordFile::getInstance().save("google.com", "Dubo Lionov", "aaa");
+        // PasswordFile::getInstance().save("liga", "fendi", "pendi");
+
+        // PasswordFile::getInstance().update("google.com", "Vencislav Monev", "kopi cat");
+        // // PasswordFile::getInstance().deleteEntry("google.com", "Vencislav Monev");
+        // std::vector<Entry> entrita = PasswordFile::getInstance().getEntries("google.com");
+        // std::cout<<entrita[0].getEncryptedPassword()<<std::endl;        
+        // std::cout<<PasswordFile::getInstance().saveFile()<<std::endl;
+        PasswordFile::closeFile();
     }
     catch(const std::exception& e)
     {

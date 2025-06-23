@@ -10,7 +10,7 @@ public:
     void add(const Entry& entry);
     
     // TODO da vidq dali da vrushta direktno Entries instanciq
-    const std::vector<Entry> getEncryptedPassword(const std::string& website, const std::string& username="");
+    const std::vector<Entry> getEncryptedPassword(const std::string& website, const std::string& username="")const;
     
     bool remove(const Entry& entry);
     bool remove(const std::string& website, const std::string& username ="");

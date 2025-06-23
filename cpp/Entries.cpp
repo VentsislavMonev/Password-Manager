@@ -13,7 +13,7 @@ void Entries::add(const Entry &entry)
     entries.push_back(entry);
 }
 
-const std::vector<Entry> Entries::getEncryptedPassword(const std::string &website, const std::string &username)
+const std::vector<Entry> Entries::getEncryptedPassword(const std::string &website, const std::string &username)const
 {
     std::vector<Entry> result;
     if(username.length()!=0)
