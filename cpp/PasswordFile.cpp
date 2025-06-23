@@ -203,7 +203,8 @@ void PasswordFile::openFile(const std::string &_fileName, const std::string &fil
         }
     }
 
-    std::cout<<"File was created: " + instance->fileName<<std::endl; 
+    fileLoaded = true;
+    std::cout<<"File was opened: " + instance->fileName<<std::endl; 
 }
 
 bool PasswordFile::isFileLoaded()

@@ -5,7 +5,7 @@ void Entries::add(const Entry &entry)
     size_t length = entries.size();
     for (size_t i = 0; i < length; ++i)
     {
-        if (entries[i] == entry) 
+        if (entries[i].getWebsite() == entry.getWebsite() && entries[i].getUsername() == entry.getUsername()) 
         {
             return;
         }
@@ -78,8 +78,7 @@ bool Entries::remove(const std::string &website, const std::string &username)
     }
     else 
     {
-        size_t length = entries.size();
-        for (size_t i = 0; i < length;)
+        for (size_t i = 0; i < entries.size();)
         {
             if (entries[i].getWebsite() == website)
             {
