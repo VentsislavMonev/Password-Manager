@@ -15,25 +15,7 @@ int main()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    // Dictionary cipher
-    //
-    try
-    {
-        DictionaryCipher aloda("chanaluboegotin");
-        std::string result = aloda.encrypt("bogotachan");
-        std::string result1 = aloda.encrypt("ab");
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            std::cout<<(int)result[i]<<std::endl;
-        }
-        std::cout<<aloda.decrypt(result)<<std::endl;
-        std::cout<<aloda.getConfig()<<std::endl;
-        std::cout<<aloda.decrypt(result1)<<std::endl;
-    }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+    
 
     std::cout<<std::endl;
 
@@ -207,6 +189,28 @@ int main()
         std::cerr << e.what() << '\n';
     }
     
+
+    // Dictionary cipher
+    //
+    try
+    {
+        DictionaryCipher aloda("C:\Users\\Shpenci\\Desktop\\watchlist.txt");
+        std::string result = aloda.encrypt("bogotachan");
+        std::string result1 = aloda.encrypt("ab");
+        for (size_t i = 0; i < result.size(); i++)
+        {
+            std::cout<<(int)result[i]<<std::endl;
+        }
+        std::cout<<aloda.decrypt(result)<<std::endl;
+        std::cout<<aloda.getConfig()<<std::endl;
+        std::cout<<aloda.decrypt(result1)<<std::endl;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Time taken: " << duration.count() << " seconds"<<std::endl;    

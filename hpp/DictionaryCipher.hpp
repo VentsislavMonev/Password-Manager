@@ -9,7 +9,10 @@ class DictionaryCipher : public Cipher
 public:
     /// @brief it fills the dictionary by a given text and  makes sure it doesnt have duplicates
     /// @param _dictionaryText the text from which the dictionary will be filled
-    DictionaryCipher(const std::string& _dictionaryText = "default");
+    // DictionaryCipher(const std::string& _dictionaryText = "default");
+    
+    DictionaryCipher();
+    DictionaryCipher(const std::string& _fileName);
 
 public:
 
@@ -29,6 +32,7 @@ public:
     virtual CipherType getType() const override;
 
 private:
+
 
     /// @brief checks if a text symbols are from the dictionary
     /// @param text the text that will be checked
@@ -55,7 +59,7 @@ private:
 
 private:
     std::vector<char> dictionary;     //TODO to use set. I do it like that becuase the course im in doesnt allow many libraries and i dont want to make my own set with a tree right now
-    std::string keyText;
+    std::string fileName;
 };
 
 #endif

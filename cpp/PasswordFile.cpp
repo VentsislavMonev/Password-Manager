@@ -132,7 +132,7 @@ void PasswordFile::openFile(const std::string &_fileName, const std::string &fil
     std::string encryptedContent = "";
     try
     {
-        encryptedContent = instance->getFileHeader(_fileName);
+        encryptedContent = instance->getFileContent(_fileName);
         instance->setFileCipher(fileCipherType,fileCipherConfig);
     }
     catch(const std::exception& e)
@@ -202,6 +202,8 @@ void PasswordFile::openFile(const std::string &_fileName, const std::string &fil
             throw e;
         }
     }
+
+    std::cout<<"File was created: " + instance->fileName<<std::endl; 
 }
 
 bool PasswordFile::isFileLoaded()
@@ -274,7 +276,7 @@ void PasswordFile::validateFileNameOpen(const std::string& _fileName)
     checkFile.close();
 }
 
-std::string PasswordFile::getFileHeader(const std::string &_fileName)
+std::string PasswordFile::getFileContent(const std::string &_fileName)
 {
     std::ifstream file(_fileName, std::ios::binary);
     if (!file) {
@@ -284,6 +286,7 @@ std::string PasswordFile::getFileHeader(const std::string &_fileName)
     file.seekg(0, std::ios::end);
     std::streampos fileSize = file.tellg();
     file.seekg(0, std::ios::beg);
+    file.clear();
     
     std::string content(fileSize, '\0');
     file.read(&content[0], fileSize);
@@ -451,7 +454,7 @@ void PasswordFile::writeEntry(const Entry &entry, std::ofstream& file) const
 
     if(!file)
     {
-        throw std::runtime_error("Failed to write entry to file: " + instance->fileName);
+        throw std::runtime_error("Failed to encrypt entry or write entry to file: " + instance->fileName);
     }
 }
 
@@ -465,7 +468,7 @@ void PasswordFile::writeHeader(std::ofstream& file) const
     }
     catch(const std::exception&)
     {
-        throw std::runtime_error("Error encrypting file header!");
+        throw std::runtime_error("File cipher can't encrypt this password cipher!");
     }
     file << encryptedContent<<'\n';
 }

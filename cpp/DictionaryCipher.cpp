@@ -1,4 +1,5 @@
 #include "DictionaryCipher.hpp"
+#include <fstream>
 
 void DictionaryCipher::setDictionary(const std::string& textDictionary)
 {
@@ -29,11 +30,33 @@ CipherType DictionaryCipher::getType() const
     return CipherType::DICTIONARY;
 }
 
-DictionaryCipher::DictionaryCipher(const std::string &_dictionaryText)
+DictionaryCipher::DictionaryCipher(const std::string &_fileName)
 {
-    setDictionary(_dictionaryText);
-    keyText = _dictionaryText;
+    std::ifstream file(_fileName, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("File is bad!");
+    }
+    
+    file.seekg(0, std::ios::end);
+    std::streampos fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+    file.clear();
+    
+    std::string content(fileSize, '\0');
+    file.read(&content[0], fileSize);
+    
+    file.close();
+
+    setDictionary(content);
+    fileName = _fileName;
 }
+
+DictionaryCipher::DictionaryCipher()
+{
+    dictionary={};
+    fileName="";
+}
+
 
 std::string DictionaryCipher::encrypt(const std::string &text) const
 {
@@ -110,11 +133,26 @@ bool DictionaryCipher::containsChar(char c)const
 
 std::string DictionaryCipher::getConfig() const
 {
-    return keyText;
+    return fileName;
 }
 
 void DictionaryCipher::setConfig(const std::string &config)
 {
-    setDictionary(config);
-    keyText=config;
+    std::ifstream file(config, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("File is bad!");
+    }
+    
+    file.seekg(0, std::ios::end);
+    std::streampos fileSize = file.tellg();
+    file.seekg(0, std::ios::beg);
+    file.clear();
+    
+    std::string content(fileSize, '\0');
+    file.read(&content[0], fileSize);
+    
+    file.close();
+
+    setDictionary(content);
+    fileName = config; 
 }

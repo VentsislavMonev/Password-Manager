@@ -7,7 +7,8 @@ Cipher *Cipher::createCipher(CipherType cipherType, const std::string &cipherCon
 {
     Cipher* newCipher = nullptr;
         
-    switch (cipherType) {
+    switch (cipherType) 
+    {
         case CipherType::CESAR:
             newCipher = new CesarCipher();
             break;

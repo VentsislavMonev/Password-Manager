@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-// TODO da vrushta entries | da vidq da vrushtam referenciq demek da opravq purvo v entries da se vrushta referenciq
 class PasswordFile 
 {
 public:
@@ -47,7 +46,7 @@ private:
     void validateFileName(const std::string& _fileName);
     void validateFileNameOpen(const std::string& _fileName);
 
-    std::string getFileHeader(const std::string& _fileName);
+    std::string getFileContent(const std::string& _fileName);
     void setFileCipher(const std::string& fileCipherType, const std::string& fileCipherConfig);
 
     std::vector<std::string> split(const std::string& str, char delimiter); 
@@ -56,13 +55,6 @@ private:
     void writeChanges()const;
     void writeEntry(const Entry& entry, std::ofstream& file)const;
     void writeHeader(std::ofstream& file)const;
-
-//     std::vector<Entry> load(const std::string& website);
-//     Entry load(const std::string& website, const std::string& username);
-//     void update(const std::string& website, const std::string& username, const std::string& newPassword);
-
-// private:
-//     void writeFileContent(const std::string& content) const;
 
 private:
     std::string fileName;
